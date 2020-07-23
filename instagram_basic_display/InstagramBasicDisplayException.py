@@ -1,0 +1,3 @@
+
+class InstagramBasicDisplayException(Exception):
+    pass
