@@ -5,7 +5,9 @@ GIT:
     COMMIT_MESSAGE: 'New version {version}'
 
 REGEXPS:
+    'python': __version__\s*=\s*\'(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\'
     'setup.py': version\s*=\s*\'(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\'
 
 VERSION_FILES:
     'setup.py': 'setup.py'
+    'instagram_basic_display/__init__.py': 'python'
