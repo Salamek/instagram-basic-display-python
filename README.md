@@ -28,7 +28,7 @@ $ pip3 install instagram-basic-display
 ```python
 from instagram_basic_display.InstagramBasicDisplay import InstagramBasicDisplay
 
-instagram_basic_display = InstagramBasicDisplay(app_id='YOUR_APP_ID', app_secret='YOUR_APP_SECRET', redirect_uri='YOUR_APP_REDIRECT_URI')
+instagram_basic_display = InstagramBasicDisplay(app_id='YOUR_APP_ID', app_secret='YOUR_APP_SECRET', redirect_url='YOUR_APP_REDIRECT_URI')
 
 print(instagram_basic_display.get_login_url()) # Returns login URL you need to follow
 
