@@ -15,3 +15,11 @@ class InstagramBasicDisplayException(Exception):
             error.get('code'),
             error.get('fbtrace_id')
         )
+
+    def __str__(self):
+        return '{}: Type: {}, Code: {}, FBTraceID: {}'.format(
+            super().__str__(),
+            self.error_type,
+            self.error_code,
+            self.error_fbtrace_id
+        )
