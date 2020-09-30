@@ -132,7 +132,8 @@ class InstagramBasicDisplay:
                 json_data = r.json()
                 if 'error' in json_data:
                     error = json_data.get('error')
-                    raise InstagramBasicDisplayException(error.get('message') if error else 'Status code: {}'.format(r.status_code))
+                    raise InstagramBasicDisplayException.from_error_response(error)
+                raise InstagramBasicDisplayException('Status code: {}'.format(r.status_code))
             except ValueError:
                 raise InstagramBasicDisplayException('Failed to parse error JSON response, HTTP code: {}'.format(r.status_code))
 
@@ -153,7 +154,10 @@ class InstagramBasicDisplay:
         if r.status_code != 200:
             try:
                 json_data = r.json()
-                raise InstagramBasicDisplayException(json_data.get('error_message') if json_data else 'Status code: {}'.format(r.status_code))
+                if 'error' in json_data:
+                    error = json_data.get('error')
+                    raise InstagramBasicDisplayException.from_error_response(error)
+                raise InstagramBasicDisplayException('Status code: {}'.format(r.status_code))
             except ValueError:
                 raise InstagramBasicDisplayException('Failed to parse error JSON response, HTTP code: {}'.format(r.status_code))
 
