@@ -127,7 +127,14 @@ class InstagramBasicDisplay:
             request_args['json'] = params
 
         r = requests.request(method.lower(), urljoin(self.GRAPH_URL, endpoint), **request_args)
-        r.raise_for_status()
+        if r.status_code != 200:
+            try:
+                json_data = r.json()
+                if 'error' in json_data:
+                    error = json_data.get('error')
+                    raise InstagramBasicDisplayException(error.get('message') if error else 'Status code: {}'.format(r.status_code))
+            except ValueError:
+                raise InstagramBasicDisplayException('Failed to parse error JSON response, HTTP code: {}'.format(r.status_code))
 
         return r.json()
 
@@ -144,10 +151,11 @@ class InstagramBasicDisplay:
 
         r = requests.request(method.lower(), api_host, **request_args)
         if r.status_code != 200:
-            json_data = r.json()
-
-            raise InstagramBasicDisplayException(
-                json_data.get('error_message') if json_data else 'Status code: {}'.format(r.status_code))
+            try:
+                json_data = r.json()
+                raise InstagramBasicDisplayException(json_data.get('error_message') if json_data else 'Status code: {}'.format(r.status_code))
+            except ValueError:
+                raise InstagramBasicDisplayException('Failed to parse error JSON response, HTTP code: {}'.format(r.status_code))
 
         return r.json()
 
