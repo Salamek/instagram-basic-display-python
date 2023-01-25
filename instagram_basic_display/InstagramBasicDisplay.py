@@ -41,7 +41,7 @@ class InstagramBasicDisplay:
     def get_user_profile(self, user_id='me'):
         return self._make_call(user_id, {'fields': self._user_fields})
 
-    def get_user_media(self, user_id='me', limit: int = None, before: int = None, after: int = None):
+    def get_user_media(self, user_id='me', limit: int = None, since: int = None, until: int = None):
         params = {
             'fields': self._media_fields
         }
@@ -49,11 +49,11 @@ class InstagramBasicDisplay:
         if limit is not None:
             params['limit'] = limit
 
-        if before is not None:
-            params['before'] = before
+        if since is not None:
+            params['before'] = since
 
-        if after is not None:
-            params['after'] = after
+        if until is not None:
+            params['after'] = until
 
         return self._make_call('{}/media'.format(user_id), params)
 
