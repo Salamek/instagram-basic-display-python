@@ -23,7 +23,7 @@ class InstagramBasicDisplay:
         self._app_secret = app_secret
         self._redirect_url = redirect_url
 
-    def get_login_url(self, scopes: list = None):
+    def get_login_url(self, state, scopes: list = None):
         if scopes is None:
             scopes = ['user_profile', 'user_media']
         if len([item for item in scopes if item not in self._scopes]) > 0:
@@ -34,7 +34,8 @@ class InstagramBasicDisplay:
             'client_id': self.get_app_id(),
             'redirect_uri': self.get_redirect_url(),
             'scope': ','.join(scopes),
-            'response_type': 'code'
+            'response_type': 'code',
+            'state': state
         })
         return urlunparse(url_parts)
 
