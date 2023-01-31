@@ -51,10 +51,10 @@ class InstagramBasicDisplay:
             params['limit'] = limit
 
         if since is not None:
-            params['before'] = since
+            params['since'] = since
 
         if until is not None:
-            params['after'] = until
+            params['until'] = until
 
         return self._make_call('{}/media'.format(user_id), params)
 
