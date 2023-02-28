@@ -7,7 +7,7 @@ repoupdate:
     TWINE_USERNAME: Salamek
   before_script:
     - apt-get update -y
-    - apt-get install twine python-setuptools -y
+    - apt-get install twine python3-setuptools -y
   script:
     - python3 setup.py sdist
     - twine upload dist/*
