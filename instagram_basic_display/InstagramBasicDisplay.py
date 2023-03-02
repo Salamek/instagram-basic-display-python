@@ -1,4 +1,5 @@
 import requests
+import uuid
 from typing import Optional
 from urllib.parse import urlencode, urlparse, parse_qs, urlunparse, urljoin
 from instagram_basic_display.InstagramBasicDisplayException import InstagramBasicDisplayException
@@ -25,7 +26,7 @@ class InstagramBasicDisplay:
         self._redirect_url = redirect_url
         self._graph_version = graph_version
 
-    def get_login_url(self, scopes: Optional[list] = None) -> str:
+    def get_login_url(self, scopes: Optional[list] = None, state: Optional[str] = str(uuid.uuid4())) -> str:
         if scopes is None:
             scopes = ['user_profile', 'user_media']
         if len([item for item in scopes if item not in self._scopes]) > 0:
@@ -36,7 +37,8 @@ class InstagramBasicDisplay:
             'client_id': self.get_app_id(),
             'redirect_uri': self.get_redirect_url(),
             'scope': ','.join(scopes),
-            'response_type': 'code'
+            'response_type': 'code',
+            'state': state
         })
         return urlunparse(url_parts)
 
