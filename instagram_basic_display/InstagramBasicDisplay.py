@@ -26,7 +26,7 @@ class InstagramBasicDisplay:
         self._redirect_url = redirect_url
         self._graph_version = graph_version
 
-    def get_login_url(self, state: Optional[str] = str(uuid.uuid4()), scopes: Optional[list] = None) -> str:
+    def get_login_url(self, scopes: Optional[list] = None, state: Optional[str] = str(uuid.uuid4())) -> str:
         if scopes is None:
             scopes = ['user_profile', 'user_media']
         if len([item for item in scopes if item not in self._scopes]) > 0:
