@@ -1,4 +1,5 @@
 import requests
+from typing import Optional
 from urllib.parse import urlencode, urlparse, parse_qs, urlunparse, urljoin
 from instagram_basic_display.InstagramBasicDisplayException import InstagramBasicDisplayException
 
@@ -18,12 +19,13 @@ class InstagramBasicDisplay:
 
     _access_token = None
 
-    def __init__(self, app_id: str, app_secret: str, redirect_url: str):
+    def __init__(self, app_id: str, app_secret: str, redirect_url: str, graph_version: Optional[str] = None):
         self._app_id = app_id
         self._app_secret = app_secret
         self._redirect_url = redirect_url
+        self._graph_version = graph_version
 
-    def get_login_url(self, scopes: list = None):
+    def get_login_url(self, scopes: Optional[list] = None) -> str:
         if scopes is None:
             scopes = ['user_profile', 'user_media']
         if len([item for item in scopes if item not in self._scopes]) > 0:
@@ -41,7 +43,7 @@ class InstagramBasicDisplay:
     def get_user_profile(self, user_id='me'):
         return self._make_call(user_id, {'fields': self._user_fields})
 
-    def get_user_media(self, user_id='me', limit: int = None, since: int = None, until: int = None):
+    def get_user_media(self, user_id='me', limit: Optional[int] = None, since: Optional[int] = None, until: Optional[int] = None):
         params = {
             'fields': self._media_fields
         }
@@ -96,7 +98,7 @@ class InstagramBasicDisplay:
             'access_token': token
         }
 
-        return self._make_o_auth_call(urljoin(self.GRAPH_URL, 'access_token'), api_data, 'GET')
+        return self._make_o_auth_call(urljoin(self._get_graph_url(), 'access_token'), api_data, 'GET')
 
     def refresh_token(self, token: str):
         api_data = {
@@ -104,7 +106,7 @@ class InstagramBasicDisplay:
             'access_token': token
         }
 
-        return self._make_o_auth_call(urljoin(self.GRAPH_URL, 'refresh_access_token'), api_data, 'GET')
+        return self._make_o_auth_call(urljoin(self._get_graph_url(), 'refresh_access_token'), api_data, 'GET')
 
     def _make_call(self, endpoint: str, params: dict = None, method: str = 'GET'):
         if not self._access_token:
@@ -126,7 +128,7 @@ class InstagramBasicDisplay:
         if method == 'POST':
             request_args['json'] = params
 
-        r = requests.request(method.lower(), urljoin(self.GRAPH_URL, endpoint), **request_args)
+        r = requests.request(method.lower(), urljoin(self._get_graph_url(), endpoint), **request_args)
         if r.status_code != 200:
             try:
                 json_data = r.json()
@@ -139,7 +141,10 @@ class InstagramBasicDisplay:
 
         return r.json()
 
-    def _make_o_auth_call(self, api_host: str, params: dict = None, method: str = 'POST'):
+    def _make_o_auth_call(self, api_host: str, params: Optional[dict] = None, method: Optional[str] = None):
+
+        if not method:
+            method = 'POST'
 
         request_args = {
             'headers': {'Accept': 'application/json'},
@@ -163,35 +168,47 @@ class InstagramBasicDisplay:
 
         return r.json()
 
-    def set_access_token(self, access_token: str):
+    def _get_graph_url(self) -> str:
+        if self._graph_version:
+            return urljoin(self.GRAPH_URL, self._graph_version)
+
+        return self.GRAPH_URL
+
+    def set_access_token(self, access_token: str) -> None:
         self._access_token = access_token
 
     def get_access_token(self) -> str:
         return self._access_token
 
-    def set_app_id(self, app_id: str):
+    def set_app_id(self, app_id: str) -> None:
         self._app_id = app_id
 
     def get_app_id(self) -> str:
         return self._app_id
 
-    def set_app_secret(self, app_secret: str):
+    def set_app_secret(self, app_secret: str) -> None:
         self._app_secret = app_secret
 
     def get_app_secret(self) -> str:
         return self._app_secret
 
-    def set_redirect_url(self, redirect_url: str):
+    def set_redirect_url(self, redirect_url: str) -> None:
         self._redirect_url = redirect_url
 
     def get_redirect_url(self) -> str:
         return self._redirect_url
 
-    def set_user_fields(self, user_fields):
+    def set_user_fields(self, user_fields: str) -> None:
         self._user_fields = user_fields
 
-    def set_media_fields(self, media_fields):
+    def set_media_fields(self, media_fields: str) -> None:
         self._media_fields = media_fields
 
-    def set_media_children_fields(self, media_children_fields):
+    def set_media_children_fields(self, media_children_fields: str) -> None:
         self._media_children_fields = media_children_fields
+
+    def set_graph_version(self, graph_version: Optional[str] = None) -> None:
+        self._graph_version = graph_version
+
+    def get_graph_version(self) -> Optional[str]:
+        return self._graph_version
