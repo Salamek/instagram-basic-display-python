@@ -81,8 +81,8 @@ class InstagramBasicDisplay:
 
     def get_o_auth_token(self, code: str):
         api_data = {
-            'app_id': self.get_app_id(),
-            'app_secret': self.get_app_secret(),
+            'client_id': self.get_app_id(),
+            'client_secret': self.get_app_secret(),
             'grant_type': 'authorization_code',
             'redirect_uri': self.get_redirect_url(),
             'code': code
