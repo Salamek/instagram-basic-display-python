@@ -30,6 +30,10 @@ from instagram_basic_display.InstagramBasicDisplay import InstagramBasicDisplay
 
 instagram_basic_display = InstagramBasicDisplay(app_id='YOUR_APP_ID', app_secret='YOUR_APP_SECRET', redirect_url='YOUR_APP_REDIRECT_URI')
 
+# Optionally you can force graph version using optional parameter `graph_version`:
+# instagram_basic_display = InstagramBasicDisplay(app_id='YOUR_APP_ID', app_secret='YOUR_APP_SECRET', redirect_url='YOUR_APP_REDIRECT_URI', graph_version='v16.0')
+
+
 print(instagram_basic_display.get_login_url()) # Returns login URL you need to follow
 
 ```
